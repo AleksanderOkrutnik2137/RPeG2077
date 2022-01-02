@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace rpg
 {
@@ -27,6 +28,7 @@ namespace rpg
             string[] Eslash = new string[ELength];
             Eslash[0] = " ";
             Sslash[0] = ">";
+            string[] Ending = {"Still thinking...", "Realizing...", "What a joke...", "Getting closer...", "He's watching...", "Not yet..."};
 
             while (Booting == true)
             {
@@ -48,7 +50,7 @@ namespace rpg
                 }
 
                 ConsoleKeyInfo keyinfo = Console.ReadKey(true);
-                if (keyinfo.Key == ConsoleKey.W)        // if-y wybierania opcji
+                if (keyinfo.Key == ConsoleKey.W)    // if-y wybierania opcji
                 {
                     Sslash[0] = ">";
                     Eslash[0] = " ";
@@ -65,16 +67,61 @@ namespace rpg
                 {
                     Booting = false;                // zwolnienie pętli
                     Console.Clear();
-                    Console.WriteLine("Passed");    // Game.Start
+                    Start.Begining();               // Rozpoczyna grę 
                 }
                 else if (keyinfo.Key == ConsoleKey.Enter && Bstart == false)
                 {
                     Booting = false;
+
+                    Console.Clear();
+                    Random rand = new Random();
+                    int index = rand.Next(Ending.Length);
+                    string Quote = Ending[index];
+                    foreach (char c in Quote)
+                    {
+                        Console.Write(c);
+                        Thread.Sleep(100);
+                    }
+                    Thread.Sleep(3000);
                     System.Environment.Exit(0);     // Wyjście z gry
                 }
             }
         }
     }
+
+    public class Start
+    {
+        public static void Begining()
+        {
+            Introduce();
+        }
+        private static void Introduce()
+        {
+            string mesOne = "Welcome.";
+            string mesTwo = "Welcome to the Survey Program.";
+            string mesThree = "Name your Character...";
+            foreach (char c in mesOne)
+            {
+                Console.Write(c);
+                Thread.Sleep(100);
+            }
+            Thread.Sleep(2000);
+            Console.Clear();
+            foreach (char c in mesTwo)
+            {
+                Console.Write(c);
+                Thread.Sleep(100);
+            }
+            Thread.Sleep(2000);
+            Console.Clear();
+            foreach(char c in mesThree)
+            {
+                Console.Write(c);
+                Thread.Sleep(100);
+            }
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
