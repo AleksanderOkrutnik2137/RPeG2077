@@ -1,17 +1,17 @@
 ____________________________
-|     A              A     |
-|     A              A     |
-|                    A     |
-|     A     AAAAAAAAAAAAAA |
-|     A       A            |
-|     A       A            |
-|     A       AAAAAA       |
-|     A       A            |
-|     A       A         AAA|
-|                          |
-|AAAAAA  AAAAAAAAAAAAA     |
-|                   A      |
-|AAAAAAA            A      |
-|AAAAAAA                   |
-|AAAAAAAAAAAAAAAAAAAA  O   |
+|AAAAAAAAAAAAAAAAAAAAAAAAAA|
+|A    A              A    A|
+|A                   A    A|
+|A    A     AAAAAAAAAAA   A|
+|A    A       A           A|
+|A    A       A           A|
+|A    A       AAAAAA      A|
+|A    A       A           A|
+|A    A       A         AAA|
+|A                        A|
+|AAAAAA  AAAAAAAAAAAAA    A|
+|A                  A     A|
+|A  AAAA            A     A|
+|A  AAAA                  A|
+|AAAAAAAAAAAAAAAAAAAA  O  A|
 ____________________________

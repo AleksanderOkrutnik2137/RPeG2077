@@ -36,18 +36,21 @@ namespace rpg
     {
         public abstract void Boot();
     }
-
     abstract class Menu : MainMenu
     {
         public abstract void Boot();
     }
-
-    class Game : Menu       // klasa gry
+    class Game : Menu
     {
         bool Booting = true;
         Player CharPlayer = new Player();
-        //Buntownik CharBunt = new Buntownik();
-        //Wizjoner CharWiz = new Wizjoner();
+
+        // Map variables
+        int setMap = 1;
+        public int x = 3, y = 3;
+        static string[] dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map1.txt");
+        public string[,] tab = new string[dataMap1.Length, dataMap1[0].Length];
+        //
 
         public override void Boot()         // przeciążenie metody uruchamiania gry / rozpoczęcie gry i bootup
         {
@@ -121,7 +124,7 @@ namespace rpg
             string[] mesClass = { "Choose your class.\n\n", "Selected class", "Visionary.", "Rioter.", " - " };
             string[] mesName = { "Name your", " Visionary.\n\n", " Rioter.\n\n", "You have choosen", " - ", "." };
             string[] mesComplete = { "Survey phase complete.", "\nSurvey results:", "\n\nChoosen class: ", "\nChoosen name: ", "\n\n\nPress Enter to continue." };
-
+            string[] mesSimBegin = { "Closing SURVEY_PROGRAM...", "Booting SIMULATION_PROGRAM...", "\nBooting complete.", "Begining simulation", " now." };
 
             Dialogue.Generate(1, mesBegin, null, 0, 2000, 1);
             Dialogue.Generate(1, mesBegin, null, 1, 2000, 1);
@@ -167,8 +170,13 @@ namespace rpg
 
                     Dialogue.Generate(1, mesName, null, 0, 0, 1);
                     Dialogue.Generate(1, mesName, null, 1, 0, 0);
+
                     CharPlayer.setName(Console.ReadLine());
-                    //CharWiz.setName(Console.ReadLine());
+                    if (CharPlayer.Name.Length < 3)
+                    {
+                        CharPlayer.setName("The Player");
+                    }
+
                     Dialogue.Generate(1, mesName, null, 3, 0, 1);
                     Dialogue.Generate(1, mesName, null, 4, 1500, 0);
                     Dialogue.Generate(2, null, CharPlayer.Name, 0, 0, 0);
@@ -183,8 +191,13 @@ namespace rpg
 
                     Dialogue.Generate(1, mesName, null, 0, 0, 1);
                     Dialogue.Generate(1, mesName, null, 2, 0, 0);
+
                     CharPlayer.setName(Console.ReadLine());
-                    //CharBunt.setName(Console.ReadLine());
+                    if (CharPlayer.Name.Length < 3)
+                    {
+                        CharPlayer.setName("The Player");
+                    }
+
                     Dialogue.Generate(1, mesName, null, 3, 0, 1);
                     Dialogue.Generate(1, mesName, null, 4, 1500, 0);
                     Dialogue.Generate(2, null, CharPlayer.Name, 0, 0, 0);
@@ -199,7 +212,7 @@ namespace rpg
                 Dialogue.Generate(1, mesComplete, null, 2, 0, 0);
                 Dialogue.Generate(2, null, "ERROR - Selected class not found. Setting Player as no-class", 0, 0, 0);
                 Dialogue.Generate(1, mesComplete, null, 3, 0, 0);
-                Dialogue.Generate(2, null, CharPlayer.Name, 0, 3000, 0);
+                Dialogue.Generate(2, null, CharPlayer.Name, 0, 0, 0);
                 Dialogue.Generate(1, mesComplete, null, 4, 0, 0);
                 while (Continue == true)
                 {
@@ -207,9 +220,253 @@ namespace rpg
                     if (keyinfo.Key == ConsoleKey.Enter)
                     {
                         Continue = false;
+                        Dialogue.Generate(1, mesSimBegin, null, 0, 2000, 1);
+                        Dialogue.Generate(1, mesSimBegin, null, 1, 3000, 1);
+                        Dialogue.Generate(1, mesSimBegin, null, 2, 2000, 0);
+                        Dialogue.Generate(1, mesSimBegin, null, 3, 2000, 1);
+                        Dialogue.Generate(1, mesSimBegin, null, 4, 1000, 0);
+                        Console.Clear();
+                        mapStart();
                     }
                 }
             }
+        }
+        public void mapStart()
+        {
+            printMap();
+            while (true)
+            {
+                moveMap();
+                move();
+            }
+        }
+        public void printMap()
+        {
+            for (int i = 0; i < dataMap1.Length; i++)
+            {
+                string tmp = dataMap1[i];
+                for (int j = 0; j < dataMap1[i].Length; j++)
+                {
+                    string p = tmp[j].ToString();
+                    if (p == "*")
+                    {
+                        tab[i, j] = tmp[j].ToString();
+                        x = i;
+                        y = j;
+                    }
+                    else
+                    {
+                        tab[i, j] = tmp[j].ToString();
+                    }
+                }
+            }
+        }
+        public void moveMap()
+        {
+            for (int i = 0; i < tab.GetLength(0); i++)
+            {
+                string tmp = dataMap1[i];
+                for (int j = 0; j < tab.GetLength(1); j++)
+                {
+                    if (i == x & j == y)
+                    {
+                        tab[i, j] = "*";
+                    }
+                    else
+                    {
+                        tab[i, j] = tmp[j].ToString();
+                    }
+                    Console.Write(tab[i, j]);
+                }
+                Console.Write(Environment.NewLine);
+            }
+        }
+        public void move()
+        {
+            ConsoleKeyInfo keyinfo = Console.ReadKey(true);
+
+            if (keyinfo.Key == ConsoleKey.W)
+            {
+                if (tab[(x - 1), y] == "A" | tab[(x - 1), y] == "|" | tab[(x - 1), y] == "_")
+                {
+
+                }
+                else if (tab[(x - 1), y] == "O")
+                {
+                    if (setMap == 1)
+                    {
+                        setMap++;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map2.txt");
+                        x = 2;
+                        y = 23;
+                    }
+                    else if (setMap == 2)
+                    {
+                        setMap++;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map3.txt");
+                        x = 11;
+                        y = 2;
+                    }
+                }
+                else if (tab[(x - 1), y] == "U")
+                {
+                    if (setMap == 3)
+                    {
+                        setMap--;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map2.txt");
+                        x = 11;
+                        y = 25;
+                    }
+                    else if (setMap == 2)
+                    {
+                        setMap--;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map1.txt");
+                        x = 14;
+                        y = 23;
+                    }
+                }
+                else
+                {
+                    x--;
+                }
+            }
+            if (keyinfo.Key == ConsoleKey.A)
+            {
+                if (tab[x, (y - 1)] == "A" | tab[x, (y - 1)] == "|" | tab[x, (y - 1)] == "_")
+                {
+
+                }
+                else if (tab[x, (y - 1)] == "O")
+                {
+                    if (setMap == 1)
+                    {
+                        setMap++;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map2.txt");
+                        x = 2;
+                        y = 23;
+                    }
+                    else if (setMap == 2)
+                    {
+                        setMap++;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map3.txt");
+                        x = 11;
+                        y = 2;
+                    }
+                }
+                else if (tab[x, (y - 1)] == "U")
+                {
+                    if (setMap == 3)
+                    {
+                        setMap--;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map2.txt");
+                        x = 11;
+                        y = 25;
+                    }
+                    else if (setMap == 2)
+                    {
+                        setMap--;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map1.txt");
+                        x = 14;
+                        y = 23;
+                    }
+                }
+                else
+                {
+                    y--;
+                }
+            }
+
+            if (keyinfo.Key == ConsoleKey.S)
+            {
+                if (tab[(x + 1), y] == "A" | tab[(x + 1), y] == "|" | tab[(x + 1), y] == "_")
+                {
+
+                }
+                else if (tab[(x + 1), y] == "O")
+                {
+                    if (setMap == 1)
+                    {
+                        setMap++;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map2.txt");
+                        x = 2;
+                        y = 23;
+                    }
+                    else if (setMap == 2)
+                    {
+                        setMap++;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map3.txt");
+                        x = 11;
+                        y = 2;
+                    }
+                }
+                else if (tab[(x + 1), y] == "U")
+                {
+                    if (setMap == 3)
+                    {
+                        setMap--;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map2.txt");
+                        x = 11;
+                        y = 25;
+                    }
+                    else if (setMap == 2)
+                    {
+                        setMap--;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map1.txt");
+                        x = 14;
+                        y = 23;
+                    }
+                }
+                else
+                {
+                    x++;
+                }
+            }
+            if (keyinfo.Key == ConsoleKey.D)
+            {
+                if (tab[x, (y + 1)] == "A" | tab[x, (y + 1)] == "|" | tab[x, (y + 1)] == "_")
+                {
+
+                }
+                else if (tab[x, (y + 1)] == "O")
+                {
+                    if (setMap == 1)
+                    {
+                        setMap++;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map2.txt");
+                        x = 2;
+                        y = 23;
+                    }
+                    else if (setMap == 2)
+                    {
+                        setMap++;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map3.txt");
+                        x = 11;
+                        y = 2;
+                    }
+                }
+                else if (tab[x, (y + 1)] == "U")
+                {
+                    if (setMap == 3)
+                    {
+                        setMap--;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map2.txt");
+                        x = 11;
+                        y = 25;
+                    }
+                    else if (setMap == 2)
+                    {
+                        setMap--;
+                        dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map1.txt");
+                        x = 14;
+                        y = 23;
+                    }
+                }
+                else
+                {
+                    y++;
+                }
+            }
+            Console.Clear();
         }
     }
 
