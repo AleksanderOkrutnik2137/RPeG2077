@@ -1,0 +1,17 @@
+____________________________
+|     A              A     |
+|     A              A     |
+|                    A     |
+|     A     AAAAAAAAAAAAAA |
+|     A       A            |
+|     A       A            |
+|     A       AAAAAA       |
+|     A       A            |
+|     A       A         AAA|
+|                          |
+|AAAAAA  AAAAAAAAAAAAA     |
+|                   A      |
+|AAAAAAA            A      |
+|AAAAAAA                   |
+|AAAAAAAAAAAAAAAAAAAA  O   |
+____________________________
