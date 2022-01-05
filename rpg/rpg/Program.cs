@@ -6,13 +6,18 @@ namespace rpg
 {
     public class Dialogue           // Prototyp generatora animowanych dialogów (na razie tylko na "exicie")
     {
-        public static void Generate(string[] mes, int index)
+        public static void Generate(string[] mes, int index, int time, int clear)
         {
+            if (clear == 1)
+            {
+                Console.Clear();
+            }
             foreach (char c in mes[index])
             {
                 Console.Write(c);
                 Thread.Sleep(50);
             }
+            Thread.Sleep(time);
         }
     }
     interface Menu                  // interfejs do uruchomienia gry
@@ -83,11 +88,8 @@ namespace rpg
                 {
                     Booting = false;
 
-                    Console.Clear();
                     Random rand = new Random();
-                    Dialogue.Generate(Ending, rand.Next(Ending.Length));
-                    Thread.Sleep(3000);
-
+                    Dialogue.Generate(Ending, rand.Next(Ending.Length), 3000, 1);
                     Environment.Exit(0);     // Wyjście z gry
                     
                 }
@@ -104,22 +106,10 @@ namespace rpg
         public static void Introduce()              // metoda rozpoczęcia procesu wprowadzania do gry
         {
             string[] mes = {"Welcome.", "Welcome to the rpg.exe - SURVEY_PROGRAM.",};
-            foreach (char c in mes[0])
-            {
-                Console.Write(c);
-                Thread.Sleep(50);
-            }
-            Thread.Sleep(2000);
-            Console.Clear();
-            foreach (char c in mes[1])
-            {
-                Console.Write(c);
-                Thread.Sleep(50);
-            }
-            Thread.Sleep(2000);
+            Dialogue.Generate(mes, 0, 2000, 1);
+            Dialogue.Generate(mes, 1, 2000, 1);
             Creator.Create();
         }
-
     }
     class Creator           // klasa creatora postaci
     {
@@ -134,16 +124,11 @@ namespace rpg
             BanSlash[0] = " ";
             WizSlash[0] = ">";
             bool Clasa = true;
-            int klasa = 1;                  // 1 = wizjoner, 2 = bandyta
+            int klasa = 1;                  // 1 = wizjoner, 2 = buntownik
 
-            string[] mes = {"Choose your class...\n\n", "Selected class", " - Visionary.", " - Rioter." };
+            string[] mes = {"Choose your class.\n\n", "Selected class", " - Visionary.", " - Rioter." };
 
-            Console.Clear();
-            foreach (char c in mes[0])
-            {
-                Console.Write(c);
-                Thread.Sleep(50);
-            }
+            Dialogue.Generate(mes, 0, 0, 1);
 
             while (Clasa == true)               // pętle while, zmieniające znaki podczas wybierania
             {
@@ -179,93 +164,42 @@ namespace rpg
 
                 if (keyinfo.Key == ConsoleKey.Enter && klasa == 1)      // if-y akceptopwania wyboru klasy
                 {
-                    Clasa = false;                
-                    Console.Clear();
-                    foreach (char ch in mes[1])
-                    {
-                        Console.Write(ch);
-                        Thread.Sleep(50);
-                    }
-                    Thread.Sleep(1500);
-                    foreach (char ch in mes[2])
-                    {
-                        Console.Write(ch);
-                        Thread.Sleep(50);
-                    }
-                    Thread.Sleep(2000);
-                    Creator.CreateWizjoner();
+                    Clasa = false;
+                    Dialogue.Generate(mes, 1, 1500, 1);
+                    Dialogue.Generate(mes, 2, 2000, 0);
+                    Creator.CreateClassName(1);
                 }
                 else if (keyinfo.Key == ConsoleKey.Enter && klasa == 2)
                 {
                     Clasa = false;
-                    Console.Clear();
-                    foreach (char ch in mes[1])
-                    {
-                        Console.Write(ch);
-                        Thread.Sleep(50);
-                    }
-                    Thread.Sleep(1500);
-                    foreach (char ch in mes[3])
-                    {
-                        Console.Write(ch);
-                        Thread.Sleep(50);
-                    }
-                    Thread.Sleep(2000);
-                    Creator.CreateBuntownik();
+                    Dialogue.Generate(mes, 1, 1500, 1);
+                    Dialogue.Generate(mes, 3, 2000, 0);
+                    Creator.CreateClassName(2);
                 }
             }
         }
-        public static void CreateWizjoner()
+        public static void CreateClassName(int klasa)
         {
-            string[] mes = { "Name your Visionary.\n\n", "You have choosen", " - ", "." };
-            Wizjoner CharWizjoner = new Wizjoner();
-
-            Console.Clear();
-            foreach (char ch in mes[0])
+            string[] mes = { "Name your", " Visionary.\n\n", " Rioter\n\n", "You have choosen", " - ", "." };
+            if (klasa == 1)
             {
-                Console.Write(ch);
-                Thread.Sleep(50);
+                
             }
-            CharWizjoner.setName(Console.ReadLine());       // wybieranie imienia
-            Console.Clear();
-            foreach (char ch in mes[1])
+            else if (klasa == 2)
             {
-                Console.Write(ch);
-                Thread.Sleep(50);
+                
             }
-            Thread.Sleep(1500);
-            foreach(char ch in mes[2] + CharWizjoner.Name + mes[3])
-            {
-                Console.Write(ch);
-                Thread.Sleep(50);
-            }
-            Thread.Sleep(3000);
+            Completing();
         }
-        public static void CreateBuntownik()
+        public static void Completing()
         {
-            string[] mes = { "Name your Rioter.\n\n", "You have choosen", " - ", "." };
-            Buntownik CharBuntownik = new Buntownik();
+            string[] mes = { "Survey phase complete.", "\nSurvey results:", "\n\nChoosen class:", "\nChoosen name:", };
+            Dialogue.Generate(mes, 0, 2000, 1);
+            Dialogue.Generate(mes, 1, 1000, 0);
+            Dialogue.Generate(mes, 2, 0, 0);
+            Dialogue.Generate(mes, 3, 5000, 0);
 
-            Console.Clear();
-            foreach (char ch in mes[0])
-            {
-                Console.Write(ch);
-                Thread.Sleep(50);
-            }
-            CharBuntownik.setName(Console.ReadLine());
-            Console.Clear();
-            foreach (char ch in mes[1])
-            {
-                Console.Write(ch);
-                Thread.Sleep(50);
-            }
-            Thread.Sleep(1500);
-            foreach (char ch in mes[2] + CharBuntownik.Name + mes[3])
-            {
-                Console.Write(ch);
-                Thread.Sleep(50);
-            }
-            Thread.Sleep(3000);
+
         }
     }
 
@@ -279,9 +213,17 @@ namespace rpg
     }
     class Wizjoner : IPlayer
     {
+        public string Klasa = "Visionary";
         public string Name { get; set; }
-        int HeroHP = 10;
-        int HeroATK = 20;
+        int HeroHP;
+        int HeroATK;
+
+        public Wizjoner(string wizName)
+        {
+            this.Name = wizName;
+            this.HeroHP = 30;
+            this.HeroATK = 17;
+        }
 
         public void setName(string newName)
         {
@@ -291,13 +233,22 @@ namespace rpg
         {
             return this.Name;
         }
+
+        
     }
     class Buntownik : IPlayer
     {
+        public string Klasa = "Rioter";
         public string Name { get; set; }
-        int HeroHP = 30;
-        int HeroATK = 17;
+        int HeroHP;
+        int HeroATK;
 
+        public Buntownik(string buntName)
+        {
+            this.Name = buntName;
+            this.HeroHP = 23;
+            this.HeroATK = 20;
+        }
         public void setName(string newName)
         {
             Name = newName;
@@ -312,7 +263,6 @@ namespace rpg
     {
         static void Main(string[] args)
         {
-            //Console.CursorVisible = false;
             Game RPG = new Game();
             RPG.Boot();
         }
