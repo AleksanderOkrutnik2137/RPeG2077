@@ -50,6 +50,8 @@ namespace rpg
         public int x = 3, y = 3;
         static string[] dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map1.txt");
         public string[,] tab = new string[dataMap1.Length, dataMap1[0].Length];
+        public bool Signal = false;
+        public int mesNumber;
         //
 
         public override void Boot()         // przeciążenie metody uruchamiania gry / rozpoczęcie gry i bootup
@@ -263,6 +265,8 @@ namespace rpg
         }
         public void moveMap()
         {
+            string[] mesInteraction = { "Trauma Generator found.\nBut it seems to be inactive..." };
+            
             for (int i = 0; i < tab.GetLength(0); i++)
             {
                 string tmp = dataMap1[i];
@@ -279,6 +283,11 @@ namespace rpg
                     Console.Write(tab[i, j]);
                 }
                 Console.Write(Environment.NewLine);
+            }
+            if (Signal == true)
+            {
+                Console.WriteLine(mesInteraction[mesNumber]);
+                Signal = false;
             }
         }
         public void move()
@@ -325,6 +334,11 @@ namespace rpg
                         y = 23;
                     }
                 }
+                else if (setMap == 3 & tab[(x - 1), y] == "T")
+                {
+                    Signal = true;
+                    mesNumber = 0;
+                }
                 else
                 {
                     x--;
@@ -369,6 +383,11 @@ namespace rpg
                         x = 14;
                         y = 23;
                     }
+                }
+                else if (setMap == 3 & tab[x, (y - 1)] == "T")
+                {
+                    Signal = true;
+                    mesNumber = 0;
                 }
                 else
                 {
@@ -416,6 +435,11 @@ namespace rpg
                         y = 23;
                     }
                 }
+                else if (setMap == 3 & tab[(x + 1), y] == "T")
+                {
+                    Signal = true;
+                    mesNumber = 0;
+                }
                 else
                 {
                     x++;
@@ -460,6 +484,11 @@ namespace rpg
                         x = 14;
                         y = 23;
                     }
+                }
+                else if (setMap == 3 & tab[x, (y + 1)] == "T")
+                {
+                    Signal = true;
+                    mesNumber = 0;
                 }
                 else
                 {
