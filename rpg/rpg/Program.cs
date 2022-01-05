@@ -6,16 +6,27 @@ namespace rpg
 {
     public class Dialogue           // Prototyp generatora animowanych dialogów (na razie tylko na "exicie")
     {
-        public static void Generate(string[] mes, int index, int time, int clear)
+        public static void Generate(int stringChar, string[] mes, string Smes, int index, int time, int clear)      // stringchar - 1/2 (pobiera array/string), mes - array, smes - string, index - do array, time - odczekaj po dialogu, clear - czyść przed dialogiem
         {
             if (clear == 1)
             {
                 Console.Clear();
             }
-            foreach (char c in mes[index])
+            if (stringChar == 1)
             {
-                Console.Write(c);
-                Thread.Sleep(50);
+                foreach (char c in mes[index])
+                {
+                    Console.Write(c);
+                    Thread.Sleep(50);
+                }
+            }
+            else if (stringChar == 2)
+            {
+                foreach (char c in Smes)
+                {
+                    Console.Write(c);
+                    Thread.Sleep(50);
+                }
             }
             Thread.Sleep(time);
         }
@@ -87,11 +98,9 @@ namespace rpg
                 else if (keyinfo.Key == ConsoleKey.Enter && Bstart == false)
                 {
                     Booting = false;
-
                     Random rand = new Random();
-                    Dialogue.Generate(Ending, rand.Next(Ending.Length), 3000, 1);
+                    Dialogue.Generate(1, Ending, null, rand.Next(Ending.Length), 3000, 1);
                     Environment.Exit(0);     // Wyjście z gry
-                    
                 }
             }
         }
@@ -106,8 +115,8 @@ namespace rpg
         public static void Introduce()              // metoda rozpoczęcia procesu wprowadzania do gry
         {
             string[] mes = {"Welcome.", "Welcome to the rpg.exe - SURVEY_PROGRAM.",};
-            Dialogue.Generate(mes, 0, 2000, 1);
-            Dialogue.Generate(mes, 1, 2000, 1);
+            Dialogue.Generate(1, mes, null, 0, 2000, 1);
+            Dialogue.Generate(1, mes, null, 1, 2000, 1);
             Creator.Create();
         }
     }
@@ -128,7 +137,7 @@ namespace rpg
 
             string[] mes = {"Choose your class.\n\n", "Selected class", " - Visionary.", " - Rioter." };
 
-            Dialogue.Generate(mes, 0, 0, 1);
+            Dialogue.Generate(1, mes,null, 0, 0, 1);
 
             while (Clasa == true)               // pętle while, zmieniające znaki podczas wybierania
             {
@@ -165,15 +174,15 @@ namespace rpg
                 if (keyinfo.Key == ConsoleKey.Enter && klasa == 1)      // if-y akceptopwania wyboru klasy
                 {
                     Clasa = false;
-                    Dialogue.Generate(mes, 1, 1500, 1);
-                    Dialogue.Generate(mes, 2, 2000, 0);
+                    Dialogue.Generate(1, mes, null, 1, 1500, 1);
+                    Dialogue.Generate(1, mes, null, 2, 3000, 0);
                     Creator.CreateClassName(1);
                 }
                 else if (keyinfo.Key == ConsoleKey.Enter && klasa == 2)
                 {
                     Clasa = false;
-                    Dialogue.Generate(mes, 1, 1500, 1);
-                    Dialogue.Generate(mes, 3, 2000, 0);
+                    Dialogue.Generate(1, mes, null, 1, 1500, 1);
+                    Dialogue.Generate(1, mes, null, 3, 3000, 0);
                     Creator.CreateClassName(2);
                 }
             }
@@ -183,21 +192,33 @@ namespace rpg
             string[] mes = { "Name your", " Visionary.\n\n", " Rioter\n\n", "You have choosen", " - ", "." };
             if (klasa == 1)
             {
-                
+                Dialogue.Generate(1, mes, null, 0, 0, 1);
+                Dialogue.Generate(1, mes, null, 1, 0, 0);
+                Wizjoner Char = new Wizjoner(Console.ReadLine());
+                Dialogue.Generate(1, mes, null, 3, 1500, 1);
+                Dialogue.Generate(1, mes, null, 4, 0, 0);
+                Dialogue.Generate(2, null, Char.Name, 0, 0, 0);
+                Dialogue.Generate(1, mes, null, 5, 3000, 0);
             }
             else if (klasa == 2)
             {
-                
+                Dialogue.Generate(1, mes, null, 0, 0, 1);
+                Dialogue.Generate(1, mes, null, 2, 0, 0);
+                Buntownik Char = new Buntownik(Console.ReadLine());
+                Dialogue.Generate(1, mes, null, 3, 1500, 1);
+                Dialogue.Generate(1, mes, null, 4, 0, 0);
+                Dialogue.Generate(2, null, Char.Name, 0, 0, 0);
+                Dialogue.Generate(1, mes, null, 5, 3000, 0);
             }
             Completing();
         }
         public static void Completing()
         {
             string[] mes = { "Survey phase complete.", "\nSurvey results:", "\n\nChoosen class:", "\nChoosen name:", };
-            Dialogue.Generate(mes, 0, 2000, 1);
-            Dialogue.Generate(mes, 1, 1000, 0);
-            Dialogue.Generate(mes, 2, 0, 0);
-            Dialogue.Generate(mes, 3, 5000, 0);
+            Dialogue.Generate(1, mes, null, 0, 2000, 1);
+            Dialogue.Generate(1, mes, null, 1, 1000, 0);
+            Dialogue.Generate(1, mes, null, 2, 0, 0);
+            Dialogue.Generate(1, mes, null, 3, 5000, 0);
 
 
         }
