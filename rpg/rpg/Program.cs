@@ -44,10 +44,12 @@ namespace rpg
 
     class Game : Menu       // klasa gry
     {
-        bool EndGame = false;   // rozpoczęcie gry i bootup
         bool Booting = true;
+        Player CharPlayer = new Player();
+        //Buntownik CharBunt = new Buntownik();
+        //Wizjoner CharWiz = new Wizjoner();
 
-        public override void Boot()         // przeciążenie metody uruchamiania gry
+        public override void Boot()         // przeciążenie metody uruchamiania gry / rozpoczęcie gry i bootup
         {
             bool Bstart = true;
             int SLength = 2;
@@ -60,7 +62,6 @@ namespace rpg
 
             while (Booting == true)
             {
-                
                 Console.Clear();
                 Console.Write(Sslash[0]);               // pętle for, zmieniające znaki podczas wybierania
                 for (int i = 1; i < SLength; i++)
@@ -68,7 +69,6 @@ namespace rpg
                     Sslash[i] = "Start";
                     Console.Write(Sslash[i]);
                 }
-
                 Console.Write("\n" + Eslash[0]);
                 for (int i = 1; i < ELength; i++)
                 {
@@ -114,11 +114,14 @@ namespace rpg
             BanSlash[0] = " ";
             WizSlash[0] = ">";
             bool Clasa = true;
+            bool Continue = true;
             int klasa = 1;
 
             string[] mesBegin = { "Welcome.", "Welcome to the rpg.exe - SURVEY_PROGRAM." };
             string[] mesClass = { "Choose your class.\n\n", "Selected class", "Visionary.", "Rioter.", " - " };
-            string[] mesName = { "Name your", " Visionary.\n\n", " Rioter\n\n", "You have choosen", " - ", "." };
+            string[] mesName = { "Name your", " Visionary.\n\n", " Rioter.\n\n", "You have choosen", " - ", "." };
+            string[] mesComplete = { "Survey phase complete.", "\nSurvey results:", "\n\nChoosen class: ", "\nChoosen name: ", "\n\n\nPress Enter to continue." };
+
 
             Dialogue.Generate(1, mesBegin, null, 0, 2000, 1);
             Dialogue.Generate(1, mesBegin, null, 1, 2000, 1);
@@ -164,10 +167,11 @@ namespace rpg
 
                     Dialogue.Generate(1, mesName, null, 0, 0, 1);
                     Dialogue.Generate(1, mesName, null, 1, 0, 0);
-                    Wizjoner Charac = new Wizjoner(Console.ReadLine());
-                    Dialogue.Generate(1, mesName, null, 3, 1500, 1);
-                    Dialogue.Generate(1, mesName, null, 4, 0, 0);
-                    Dialogue.Generate(2, null, Charac.Name, 0, 0, 0);
+                    CharPlayer.setName(Console.ReadLine());
+                    //CharWiz.setName(Console.ReadLine());
+                    Dialogue.Generate(1, mesName, null, 3, 0, 1);
+                    Dialogue.Generate(1, mesName, null, 4, 1500, 0);
+                    Dialogue.Generate(2, null, CharPlayer.Name, 0, 0, 0);
                     Dialogue.Generate(1, mesName, null, 5, 3000, 0);
                     Clasa = false;
                 }
@@ -179,87 +183,74 @@ namespace rpg
 
                     Dialogue.Generate(1, mesName, null, 0, 0, 1);
                     Dialogue.Generate(1, mesName, null, 2, 0, 0);
-                    Buntownik Charac = new Buntownik(Console.ReadLine());
-                    Dialogue.Generate(1, mesName, null, 3, 1500, 1);
-                    Dialogue.Generate(1, mesName, null, 4, 0, 0);
-                    Dialogue.Generate(2, null, Charac.Name, 0, 0, 0);
+                    CharPlayer.setName(Console.ReadLine());
+                    //CharBunt.setName(Console.ReadLine());
+                    Dialogue.Generate(1, mesName, null, 3, 0, 1);
+                    Dialogue.Generate(1, mesName, null, 4, 1500, 0);
+                    Dialogue.Generate(2, null, CharPlayer.Name, 0, 0, 0);
                     Dialogue.Generate(1, mesName, null, 5, 3000, 0);
                     Clasa = false;
+                }
+            }
+            if (Clasa == false)
+            {
+                Dialogue.Generate(1, mesComplete, null, 0, 2000, 1);
+                Dialogue.Generate(1, mesComplete, null, 1, 1000, 0);
+                Dialogue.Generate(1, mesComplete, null, 2, 0, 0);
+                Dialogue.Generate(2, null, "ERROR - Selected class not found. Setting Player as no-class", 0, 0, 0);
+                Dialogue.Generate(1, mesComplete, null, 3, 0, 0);
+                Dialogue.Generate(2, null, CharPlayer.Name, 0, 3000, 0);
+                Dialogue.Generate(1, mesComplete, null, 4, 0, 0);
+                while (Continue == true)
+                {
+                    ConsoleKeyInfo keyinfo = Console.ReadKey(true);
+                    if (keyinfo.Key == ConsoleKey.Enter)
+                    {
+                        Continue = false;
+                    }
                 }
             }
         }
     }
 
-    class Creator           // klasa creatora postaci
+    class Player
     {
-        public static void CreateClassName(int klasa)
-        {
-            Completing();
-        }
-        public static void Completing()
-        {
-            string[] mes = { "Survey phase complete.", "\nSurvey results:", "\n\nChoosen class:", "\nChoosen name:", };
-            Dialogue.Generate(1, mes, null, 0, 2000, 1);
-            Dialogue.Generate(1, mes, null, 1, 1000, 0);
-            Dialogue.Generate(1, mes, null, 2, 0, 0);
-            Dialogue.Generate(1, mes, null, 3, 5000, 0);
-            
-        }
-    }
-
-    interface IPlayer                           // klasy gracza
-    {
-
-    }
-    abstract class Player : IPlayer
-    {
-
-    }
-    class Wizjoner : IPlayer
-    {
-        public string Klasa = "Visionary";
         public string Name { get; set; }
         int HeroHP;
         int HeroATK;
-
-        public Wizjoner(string wizName)
+        public Player()
         {
-            this.Name = wizName;
+            this.Name = Name;
             this.HeroHP = 30;
-            this.HeroATK = 17;
+            this.HeroATK = 15;
         }
-
         public void setName(string newName)
         {
             this.Name = newName;
         }
-        public string getName()
-        {
-            return this.Name;
-        }
-
-        
     }
-    class Buntownik : IPlayer
+    class Wizjoner : Player
     {
-        public string Klasa = "Rioter";
-        public string Name { get; set; }
+        public string Klasa = "Visionary";
         int HeroHP;
         int HeroATK;
 
-        public Buntownik(string buntName)
+        public Wizjoner()
         {
-            this.Name = buntName;
+            this.HeroHP = 30;
+            this.HeroATK = 17;
+        }
+    }
+    class Buntownik : Player
+    {
+        public string Klasa = "Rioter";
+        int HeroHP;
+        int HeroATK;
+
+        public Buntownik()
+        {
             this.HeroHP = 23;
             this.HeroATK = 20;
-        }
-        public void setName(string newName)
-        {
-            Name = newName;
-        }
-        public string getName()
-        {
-            return this.Name;
         }
     }
 
@@ -268,6 +259,7 @@ namespace rpg
         static void Main(string[] args)
         {
             Game RPG = new Game();
+
             RPG.Boot();
         }
     }
