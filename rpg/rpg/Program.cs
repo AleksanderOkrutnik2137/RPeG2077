@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
@@ -47,11 +48,13 @@ namespace rpg
 
         // Map variables
         int setMap = 1;
-        public int x = 3, y = 3;
+        public int x = 3, y = 4;
+        public int NPCx = 4, NPCy = 10;
         static string[] dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map1.txt");
         public string[,] tab = new string[dataMap1.Length, dataMap1[0].Length];
         public bool Signal = false;
         public int mesNumber;
+        public int Wait = 0;
         //
 
         public override void Boot()         // przeciążenie metody uruchamiania gry / rozpoczęcie gry i bootup
@@ -210,7 +213,7 @@ namespace rpg
             if (Clasa == false)
             {
                 Dialogue.Generate(1, mesComplete, null, 0, 2000, 1);
-                Dialogue.Generate(1, mesComplete, null, 1, 1000, 0);
+                Dialogue.Generate(1, mesComplete, null, 1, 0, 0);
                 Dialogue.Generate(1, mesComplete, null, 2, 0, 0);
                 Dialogue.Generate(2, null, "ERROR - Selected class not found. Setting Player as no-class", 0, 0, 0);
                 Dialogue.Generate(1, mesComplete, null, 3, 0, 0);
@@ -235,46 +238,61 @@ namespace rpg
         }
         public void mapStart()
         {
-            printMap();
+            GenerateMap();
             while (true)
             {
-                moveMap();
+                PrintMap();
                 move();
+                npcMove();
             }
         }
-        public void printMap()
+        public void GenerateMap()
         {
             for (int i = 0; i < dataMap1.Length; i++)
             {
                 string tmp = dataMap1[i];
+                string tmp2 = dataMap1 [i];
                 for (int j = 0; j < dataMap1[i].Length; j++)
                 {
                     string p = tmp[j].ToString();
+                    string npc = tmp[j].ToString();
                     if (p == "*")
                     {
                         tab[i, j] = tmp[j].ToString();
                         x = i;
                         y = j;
                     }
+                    if (setMap == 2 & npc == "S")
+                    {
+                        tab[i, j] = tmp2[j].ToString();
+                        NPCx = i;
+                        NPCy = j;
+                    }
                     else
                     {
                         tab[i, j] = tmp[j].ToString();
                     }
+
                 }
             }
         }
-        public void moveMap()
+        public void PrintMap()
         {
-            string[] mesInteraction = { "Trauma Generator found.\nBut it seems to be inactive..." };
+            string[] mesInteraction = { "Trauma Generator found.\nBut it seems to be inactive...", "Go to the next room.\nThere's Trauma Generator." };
             
             for (int i = 0; i < tab.GetLength(0); i++)
             {
                 string tmp = dataMap1[i];
+                string tmp2 = dataMap1[i];
                 for (int j = 0; j < tab.GetLength(1); j++)
                 {
                     if (i == x & j == y)
                     {
                         tab[i, j] = "*";
+                    }
+                    else if (setMap == 2 & i == NPCx & j == NPCy)
+                    {
+                        tab[i, j] = "S";
                     }
                     else
                     {
@@ -296,6 +314,7 @@ namespace rpg
 
             if (keyinfo.Key == ConsoleKey.W)
             {
+                Wait++;
                 if (tab[(x - 1), y] == "A" | tab[(x - 1), y] == "|" | tab[(x - 1), y] == "_")
                 {
 
@@ -339,6 +358,11 @@ namespace rpg
                     Signal = true;
                     mesNumber = 0;
                 }
+                else if (tab[(x - 1), y] == "S")
+                {
+                    Signal = true;
+                    mesNumber = 1;
+                }
                 else
                 {
                     x--;
@@ -346,6 +370,7 @@ namespace rpg
             }
             if (keyinfo.Key == ConsoleKey.A)
             {
+                Wait++;
                 if (tab[x, (y - 1)] == "A" | tab[x, (y - 1)] == "|" | tab[x, (y - 1)] == "_")
                 {
 
@@ -389,6 +414,11 @@ namespace rpg
                     Signal = true;
                     mesNumber = 0;
                 }
+                else if (tab[x, (y - 1)] == "S")
+                {
+                    Signal = true;
+                    mesNumber = 1;
+                }
                 else
                 {
                     y--;
@@ -397,6 +427,7 @@ namespace rpg
 
             if (keyinfo.Key == ConsoleKey.S)
             {
+                Wait++;
                 if (tab[(x + 1), y] == "A" | tab[(x + 1), y] == "|" | tab[(x + 1), y] == "_")
                 {
 
@@ -440,6 +471,11 @@ namespace rpg
                     Signal = true;
                     mesNumber = 0;
                 }
+                else if (tab[(x + 1), y] == "S")
+                {
+                    Signal = true;
+                    mesNumber = 1;
+                }
                 else
                 {
                     x++;
@@ -447,6 +483,7 @@ namespace rpg
             }
             if (keyinfo.Key == ConsoleKey.D)
             {
+                Wait++;
                 if (tab[x, (y + 1)] == "A" | tab[x, (y + 1)] == "|" | tab[x, (y + 1)] == "_")
                 {
 
@@ -490,12 +527,80 @@ namespace rpg
                     Signal = true;
                     mesNumber = 0;
                 }
+                else if (tab[x, (y + 1)] == "S")
+                {
+                    Signal = true;
+                    mesNumber = 1;
+                }
                 else
                 {
                     y++;
                 }
             }
             Console.Clear();
+        }
+        public void npcMove()
+        {
+            Random rand = new Random();
+            int updown;
+            int plusminus;
+            if (setMap == 2 & Wait > 2)
+            {
+                Wait = 0;
+                if (tab[(NPCx - 1), NPCy] == "A" | tab[(NPCx - 1), NPCy] == "|" | tab[(NPCx - 1), NPCy] == "_") // W
+                {
+                    NPCx = NPCx + 1;
+                }
+                else if (tab[(NPCx - 1), NPCy] == "*")
+                {
+                    Wait = 0;
+                }
+                else if (tab[NPCx, (NPCy - 1)] == "A" | tab[NPCx, (NPCy - 1)] == "|" | tab[NPCx, (NPCy - 1)] == "_") // A
+                {
+                    NPCy = NPCy + 1;
+                }
+                else if (tab[NPCx, (NPCy - 1)] == "*")
+                {
+                    Wait = 0;
+                }
+                else if (tab[(NPCx + 1), NPCy] == "A" | tab[(NPCx + 1), NPCy] == "|" | tab[(NPCx + 1), NPCy] == "_") // S
+                {
+                    NPCx = NPCx - 1;
+                }
+                else if (tab[(NPCx + 1), NPCy] == "*")
+                {
+                    Wait = 0;
+                }
+                else if (tab[NPCx, (NPCy + 1)] == "A" | tab[NPCx, (NPCy + 1)] == "|" | tab[NPCx, (NPCy + 1)] == "_") // D
+                {
+                    NPCy = NPCy - 1;
+                }
+                else if (tab[NPCx, (NPCy + 1)] == "*")
+                {
+                    Wait = 0;
+                }
+                else
+                {
+                    updown = rand.Next(5);       //x 1 y 0
+                    plusminus = rand.Next(2);    //plus 1 minus 0
+                    if (updown == 1)
+                    {
+                        NPCy++;
+                    }
+                    else if (updown == 2)
+                    {
+                        NPCy--;
+                    }
+                    else if (updown == 3)
+                    {
+                        NPCx++;
+                    }
+                    else if (updown == 4)
+                    {
+                        NPCx++;
+                    }
+                }
+            }
         }
     }
 
@@ -546,7 +651,7 @@ namespace rpg
         {
             Game RPG = new Game();
 
-            RPG.Boot();
+            RPG.mapStart();
         }
     }
 }

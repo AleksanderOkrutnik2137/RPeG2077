@@ -1,7 +1,7 @@
 ____________________________
 |AAAAAAAAAAAAAAAAAAAA  U  A|
-|AAAAAAASSSSSSSSSSSSA     A|
-|AAAAAAASSSSSSSSSSSSA     A|
+|AAAAAAAAAAAAAAAAAAAA     A|
+|AAAAAAAAAAAAAAAAAAAA     A|
 |A    AA      AAAAAAA     A|
 |A    AA      A           A|
 |A    AA      A           A|
