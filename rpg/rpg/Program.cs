@@ -279,7 +279,7 @@ namespace rpg
         }
         public void PrintMap()
         {
-            string[] mesInteraction = { "Trauma Generator found.\nBut it seems to be inactive...", "Go to the next room.\nThere's Trauma Generator." };
+            string[] mesInteraction = { "                             \n                           ", "Trauma Generator found.\nBut it seems to be inactive...", "Go to the next room.\nThere's Trauma Generator." };
             
             for (int i = 0; i < tab.GetLength(0); i++)
             {
@@ -311,6 +311,11 @@ namespace rpg
             {
                 Console.WriteLine(mesInteraction[mesNumber]);
                 Signal = false;
+            }
+            else
+            {
+                mesNumber = 0;
+                Console.WriteLine(mesInteraction[mesNumber]);
             }
             Console.SetCursorPosition(0, 0);
         }
@@ -363,12 +368,12 @@ namespace rpg
                 else if (setMap == 3 & tab[(x - 1), y] == "T")
                 {
                     Signal = true;
-                    mesNumber = 0;
+                    mesNumber = 1;
                 }
                 else if (tab[(x - 1), y] == "S")
                 {
                     Signal = true;
-                    mesNumber = 1;
+                    mesNumber = 2;
                 }
                 else
                 {
@@ -419,12 +424,12 @@ namespace rpg
                 else if (setMap == 3 & tab[x, (y - 1)] == "T")
                 {
                     Signal = true;
-                    mesNumber = 0;
+                    mesNumber = 1;
                 }
                 else if (tab[x, (y - 1)] == "S")
                 {
                     Signal = true;
-                    mesNumber = 1;
+                    mesNumber = 2;
                 }
                 else
                 {
@@ -476,12 +481,12 @@ namespace rpg
                 else if (setMap == 3 & tab[(x + 1), y] == "T")
                 {
                     Signal = true;
-                    mesNumber = 0;
+                    mesNumber = 1;
                 }
                 else if (tab[(x + 1), y] == "S")
                 {
                     Signal = true;
-                    mesNumber = 1;
+                    mesNumber = 2;
                 }
                 else
                 {
@@ -532,12 +537,12 @@ namespace rpg
                 else if (setMap == 3 & tab[x, (y + 1)] == "T")
                 {
                     Signal = true;
-                    mesNumber = 0;
+                    mesNumber = 1;
                 }
                 else if (tab[x, (y + 1)] == "S")
                 {
                     Signal = true;
-                    mesNumber = 1;
+                    mesNumber = 2;
                 }
                 else
                 {
