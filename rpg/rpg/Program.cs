@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 
 
@@ -45,6 +46,7 @@ namespace rpg
     {
         bool Booting = true;
         Player CharPlayer = new Player();
+        Encoding ascii = Encoding.ASCII;
 
         // Map variables
         int setMap = 1;
@@ -272,7 +274,6 @@ namespace rpg
                     {
                         tab[i, j] = tmp[j].ToString();
                     }
-
                 }
             }
         }
@@ -298,7 +299,11 @@ namespace rpg
                     {
                         tab[i, j] = tmp[j].ToString();
                     }
-                    Console.Write(tab[i, j]);
+                    if (i == 0) tab[i, j] = "\u2584";
+                    else if (i == tab.GetLength(0) - 1) tab[i, j] = "\u2580";
+                    else if (j == 0) tab[i, j] = "\u2588";
+                    else if (j == tab.GetLength(1) - 1) tab[i, j] = "\u2588";
+                   Console.Write(tab[i, j]);  
                 }
                 Console.Write(Environment.NewLine);
             }
@@ -307,7 +312,9 @@ namespace rpg
                 Console.WriteLine(mesInteraction[mesNumber]);
                 Signal = false;
             }
+            Console.SetCursorPosition(0, 0);
         }
+
         public void move()
         {
             ConsoleKeyInfo keyinfo = Console.ReadKey(true);
@@ -484,7 +491,7 @@ namespace rpg
             if (keyinfo.Key == ConsoleKey.D)
             {
                 Wait++;
-                if (tab[x, (y + 1)] == "A" | tab[x, (y + 1)] == "|" | tab[x, (y + 1)] == "_")
+                if (tab[x, (y + 1)] == "A" | tab[x, (y + 1)] == "\u2580" | tab[x, (y + 1)] == "\u2584")
                 {
 
                 }
@@ -537,13 +544,12 @@ namespace rpg
                     y++;
                 }
             }
-            Console.Clear();
+            //Console.Clear();
         }
         public void npcMove()
         {
             Random rand = new Random();
             int updown;
-            int plusminus;
             if (setMap == 2 & Wait > 2)
             {
                 Wait = 0;
@@ -582,7 +588,6 @@ namespace rpg
                 else
                 {
                     updown = rand.Next(5);       //x 1 y 0
-                    plusminus = rand.Next(2);    //plus 1 minus 0
                     if (updown == 1)
                     {
                         NPCy++;
@@ -650,7 +655,7 @@ namespace rpg
         static void Main(string[] args)
         {
             Game RPG = new Game();
-
+            Console.CursorVisible = false;
             RPG.mapStart();
         }
     }
