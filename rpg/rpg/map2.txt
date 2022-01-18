@@ -1,6 +1,6 @@
 ____________________________
+|AAAAAAAAAAAAAAAAAAAAAAAAAA|
 |AAAAAAAAAAAAAAAAAAAA  U  A|
-|AAAAAAAAAAAAAAAAAAAA     A|
 |AAAAAAAAAAAAAAAAAAAA     A|
 |A    AA      AAAAAAA     A|
 |A    AA      A           A|
@@ -8,9 +8,9 @@ ____________________________
 |A    AA      AAAAAA      A|
 |A    AA      A           A|
 |A    AA      A         AAA|
-|A                         |
-|A                        O|
-|A                         |
+|A                        A|
+|A                       OA|
+|A                        A|
 |AAAAAAAAAAAAAAAAAAAAAAAAAA|
 |AAAAAAAAAAAAAAAAAAAAAAAAAA|
 |AAAAAAAAAAAAAAAAAAAAAAAAAA|

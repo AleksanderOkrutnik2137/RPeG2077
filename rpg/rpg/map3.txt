@@ -8,9 +8,9 @@ ____________________________
 |A                        A|
 |A                        A|
 |A                        A|
-|                         A|
-|U                        A|
-|                         A|
+|A                        A|
+|AU                       A|
+|A                        A|
 |A                        A|
 |A                        A|
 |AAAAAAAAAAAAAAAAAAAAAAAAAA|

@@ -12,6 +12,6 @@ ____________________________
 |AAAAAA  AAAAAAAAAAAAA    A|
 |A                  A     A|
 |A  AAAA            A     A|
-|A  AAAA                  A|
-|AAAAAAAAAAAAAAAAAAAA  O  A|
+|A  AAAA               O  A|
+|AAAAAAAAAAAAAAAAAAAAAAAAAA|
 ____________________________

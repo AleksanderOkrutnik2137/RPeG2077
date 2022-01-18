@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Media;
 using System.Text;
 using System.Threading;
+
 
 
 namespace rpg
@@ -52,8 +53,10 @@ namespace rpg
         int setMap = 1;
         public int x = 3, y = 4;
         public int NPCx = 4, NPCy = 10;
+        public int EnemX = 6, EnemY = 21;
         static string[] dataMap1 = File.ReadAllLines(@"C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\map1.txt");
         public string[,] tab = new string[dataMap1.Length, dataMap1[0].Length];
+        public string[,] borders = new string[dataMap1.Length, dataMap1[0].Length];
         public bool Signal = false;
         public int mesNumber;
         public int Wait = 0;
@@ -246,6 +249,7 @@ namespace rpg
                 PrintMap();
                 move();
                 npcMove();
+                enemyMove();
             }
         }
         public void GenerateMap()
@@ -253,11 +257,13 @@ namespace rpg
             for (int i = 0; i < dataMap1.Length; i++)
             {
                 string tmp = dataMap1[i];
-                string tmp2 = dataMap1 [i];
+                string tmp2 = dataMap1[i];
+                string tmp3 = dataMap1[i];
                 for (int j = 0; j < dataMap1[i].Length; j++)
                 {
                     string p = tmp[j].ToString();
                     string npc = tmp[j].ToString();
+                    string enem = tmp[j].ToString();
                     if (p == "*")
                     {
                         tab[i, j] = tmp[j].ToString();
@@ -270,6 +276,12 @@ namespace rpg
                         NPCx = i;
                         NPCy = j;
                     }
+                    if (setMap == 1 & enem == "E")
+                    {
+                        tab[i, j] = tmp3[j].ToString();
+                        EnemX = i;
+                        EnemY = j;
+                    }
                     else
                     {
                         tab[i, j] = tmp[j].ToString();
@@ -279,12 +291,11 @@ namespace rpg
         }
         public void PrintMap()
         {
-            string[] mesInteraction = { "                             \n                           ", "Trauma Generator found.\nBut it seems to be inactive...", "Go to the next room.\nThere's Trauma Generator." };
+            string[] mesInteraction = { "                             \n                              ", "Trauma Generator found.\nBut it seems to be inactive...", "Go to the next room.\nThere's Trauma Generator." };
             
             for (int i = 0; i < tab.GetLength(0); i++)
             {
                 string tmp = dataMap1[i];
-                string tmp2 = dataMap1[i];
                 for (int j = 0; j < tab.GetLength(1); j++)
                 {
                     if (i == x & j == y)
@@ -295,12 +306,16 @@ namespace rpg
                     {
                         tab[i, j] = "S";
                     }
+                    else if (setMap == 1 & i == EnemX & j == EnemY)
+                    {
+                        tab[i, j] = "E";
+                    }
                     else
                     {
                         tab[i, j] = tmp[j].ToString();
                     }
-                    if (i == 0) tab[i, j] = "\u2584";
-                    else if (i == tab.GetLength(0) - 1) tab[i, j] = "\u2580";
+                    if (i == 0) tab[i, j] = "\u2584"; //down
+                    else if (i == tab.GetLength(0) - 1) tab[i, j] = "\u2580"; //upper
                     else if (j == 0) tab[i, j] = "\u2588";
                     else if (j == tab.GetLength(1) - 1) tab[i, j] = "\u2588";
                    Console.Write(tab[i, j]);  
@@ -496,7 +511,7 @@ namespace rpg
             if (keyinfo.Key == ConsoleKey.D)
             {
                 Wait++;
-                if (tab[x, (y + 1)] == "A" | tab[x, (y + 1)] == "\u2580" | tab[x, (y + 1)] == "\u2584")
+                if (tab[x, (y + 1)] == "A" | tab[x, (y + 1)] == "|" | tab[x, (y + 1)] == "_")
                 {
 
                 }
@@ -612,6 +627,67 @@ namespace rpg
                 }
             }
         }
+        public void enemyMove()
+        {
+            Random rand = new Random();
+            int updown;
+            if (setMap == 1 & Wait > 2)
+            {
+                Wait = 0;
+                if (tab[(EnemX - 1), EnemY] == "A") // W
+                {
+                    EnemX = EnemX + 1;
+                }
+                else if (tab[EnemX, (EnemY - 1)] == "A") // A
+                {
+                    EnemY = EnemY + 1;
+                }
+                else if (tab[(EnemX + 1), EnemY] == "A") // S
+                {
+                    EnemX = EnemX - 1;
+                }
+                else if (tab[EnemX, (EnemY + 1)] == "A") // D
+                {
+                    EnemY = EnemY - 1;
+                }
+                else if (tab[(EnemX - 1), EnemY] == "*")
+                {
+                    Wait = 0;
+                }
+                else if (tab[EnemX, (EnemY - 1)] == "*")
+                {
+                    Wait = 0;
+                }
+                else if (tab[(EnemX + 1), EnemY] == "*")
+                {
+                    Wait = 0;
+                }
+                else if (tab[EnemX, (EnemY + 1)] == "*")
+                {
+                    Wait = 0;
+                }
+                else
+                {
+                    updown = rand.Next(5);       //x 1 y 0
+                    if (updown == 1)
+                    {
+                        EnemY++;
+                    }
+                    else if (updown == 2)
+                    {
+                        EnemY--;
+                    }
+                    else if (updown == 3)
+                    {
+                        EnemX++;
+                    }
+                    else if (updown == 4)
+                    {
+                        EnemX++;
+                    }
+                }
+            }
+        }
     }
 
     class Player
@@ -652,6 +728,19 @@ namespace rpg
         {
             this.HeroHP = 23;
             this.HeroATK = 20;
+        }
+    }
+
+    class Enemy
+    {
+        public string Name { get; set; }
+        int HeroHP;
+        int HeroATK;
+        public Enemy()
+        {
+            this.Name = ">Null< Soldier";
+            this.HeroHP = 30;
+            this.HeroATK = 15;
         }
     }
 

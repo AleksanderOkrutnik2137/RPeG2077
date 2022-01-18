@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "9hQFugNcabJp4fYjBxLgooCIk5XKIBkK8ADownC/ysFgcMHzi/taQsWFc0SzJ3MQUR+ykbKnV5maSj6fNDMC5A==",
+  "dgSpecHash": "sFMRKuxykgcY1tttgXHoR7+lR5buEH3tEMQOb7epoGynebO3+CqIcUxc92uvdlumWnytRM6i/uvC0wzFvoe8Og==",
   "success": true,
   "projectFilePath": "C:\\Users\\alexp\\Documents\\GitHub\\RPeG2077\\rpg\\rpg\\rpg.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\alexp\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
+    "C:\\Users\\alexp\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512",
+    "C:\\Users\\alexp\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

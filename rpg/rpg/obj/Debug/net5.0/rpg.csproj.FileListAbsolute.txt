@@ -14,3 +14,11 @@ C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\obj\Debug\net5.0\rpg.dll
 C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\obj\Debug\net5.0\ref\rpg.dll
 C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\obj\Debug\net5.0\rpg.pdb
 C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\obj\Debug\net5.0\rpg.genruntimeconfig.cache
+C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\bin\Debug\net5.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\bin\Debug\net5.0\System.Drawing.Common.dll
+C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\bin\Debug\net5.0\System.Windows.Extensions.dll
+C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\bin\Debug\net5.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
+C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\bin\Debug\net5.0\runtimes\unix\lib\netcoreapp3.1\System.Drawing.Common.dll
+C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\bin\Debug\net5.0\runtimes\win\lib\netcoreapp3.1\System.Drawing.Common.dll
+C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\bin\Debug\net5.0\runtimes\win\lib\netcoreapp3.1\System.Windows.Extensions.dll
+C:\Users\alexp\Documents\GitHub\RPeG2077\rpg\rpg\obj\Debug\net5.0\rpg.csproj.CopyComplete
