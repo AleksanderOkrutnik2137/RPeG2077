@@ -47,6 +47,7 @@ namespace rpg
     {
         bool Booting = true;
         Player CharPlayer = new Player();
+        Enemy Hostile = new Enemy();
         Encoding ascii = Encoding.ASCII;
 
         // Map variables
@@ -60,6 +61,7 @@ namespace rpg
         public bool Signal = false;
         public int mesNumber;
         public int Wait = 0;
+        public bool Battle = false;
         //
 
         public override void Boot()         // przeciążenie metody uruchamiania gry / rozpoczęcie gry i bootup
@@ -75,7 +77,6 @@ namespace rpg
 
             while (Booting == true)
             {
-                Console.Clear();
                 Console.Write(Sslash[0]);               // pętle for, zmieniające znaki podczas wybierania
                 for (int i = 1; i < SLength; i++)
                 {
@@ -88,6 +89,7 @@ namespace rpg
                     Eslash[i] = "Exit";
                     Console.Write(Eslash[i]);
                 }
+                Console.SetCursorPosition(0, 0);
 
                 ConsoleKeyInfo keyinfo = Console.ReadKey(true);
                 if (keyinfo.Key == ConsoleKey.W)    // if-y wybierania opcji
@@ -244,12 +246,16 @@ namespace rpg
         public void mapStart()
         {
             GenerateMap();
-            while (true)
+            while (Battle == false)
             {
                 PrintMap();
                 move();
                 npcMove();
                 enemyMove();
+            }
+            if (Battle == true)
+            {
+                Fight();
             }
         }
         public void GenerateMap()
@@ -291,8 +297,8 @@ namespace rpg
         }
         public void PrintMap()
         {
-            string[] mesInteraction = { "                             \n                              ", "Trauma Generator found.\nBut it seems to be inactive...", "Go to the next room.\nThere's Trauma Generator." };
-            
+            string[] mesInteraction = { "                             \n                              ", "Trauma Generator found.\nBut it seems to be inactive...", "Go to the next room.\nThere's Trauma Generator.", "An enemy!" };
+
             for (int i = 0; i < tab.GetLength(0); i++)
             {
                 string tmp = dataMap1[i];
@@ -318,7 +324,7 @@ namespace rpg
                     else if (i == tab.GetLength(0) - 1) tab[i, j] = "\u2580"; //upper
                     else if (j == 0) tab[i, j] = "\u2588";
                     else if (j == tab.GetLength(1) - 1) tab[i, j] = "\u2588";
-                   Console.Write(tab[i, j]);  
+                    Console.Write(tab[i, j]);
                 }
                 Console.Write(Environment.NewLine);
             }
@@ -334,6 +340,113 @@ namespace rpg
             }
             Console.SetCursorPosition(0, 0);
         }
+        public void Fight()
+        {
+            Dialogue.Generate(2, null, Hostile.Name, 0, 0, 1);
+            Dialogue.Generate(2, null, " spotted you.\n\n", 0, 0, 0);
+            while (true)
+            {
+                bool Round = true;
+                int Selection = 1;
+
+                int fightLength = 2;
+                int defendLength = 2;
+                int infoLength = 2;
+                int passLength = 2;
+
+                string[] fightSlash = new string[fightLength];
+                string[] defendSlash = new string[defendLength];
+                string[] infoSlash = new string[infoLength];
+                string[] passSlash = new string[passLength];
+                fightSlash[0] = ">";
+                defendSlash[0] = " ";
+                infoSlash[0] = " ";
+                passSlash[0] = " ";
+
+                while (Round == true)
+                {
+
+                    Console.Write(fightSlash[0]);               
+                    for (int i = 1; i < fightLength; i++)
+                    {
+                        fightSlash[i] = "Fight";
+                        Console.Write(fightSlash[i]);
+                    }
+                    Console.Write("\n" + defendSlash[0]);
+                    for (int i = 1; i < defendLength; i++)
+                    {
+                        defendSlash[i] = "Defend";
+                        Console.Write(defendSlash[i]);
+                    }
+                    Console.Write("\n" + infoSlash[0]);
+                    for (int i = 1; i < infoLength; i++)
+                    {
+                        infoSlash[i] = "Info";
+                        Console.Write(infoSlash[i]);
+                    }
+                    Console.Write("\n" + passSlash[0]);
+                    for (int i = 1; i < passLength; i++)
+                    {
+                        passSlash[i] = "Pass";
+                        Console.Write(passSlash[i]);
+                    }
+                    Console.WriteLine(Selection);
+
+                    Console.SetCursorPosition(0, 2);
+                    ConsoleKeyInfo keyinfo = Console.ReadKey(true);
+                    if (keyinfo.Key == ConsoleKey.W)
+                    {
+                        if (Selection > 1)
+                        {
+                            Selection--;
+                        }
+                        if (Selection == 1)
+                        {
+
+                        }
+                    }
+                    else if (keyinfo.Key == ConsoleKey.S)
+                    {
+                        if (Selection < 4)
+                        {
+                            Selection++;
+                        }
+                        if (Selection == 4)
+                        {
+
+                        }
+                    }
+                    if (Selection == 1)
+                    {
+                        fightSlash[0] = ">";
+                        defendSlash[0] = " ";
+                        infoSlash[0] = " ";
+                        passSlash[0] = " ";
+                    }
+                    if (Selection == 2)
+                    {
+                        fightSlash[0] = " ";
+                        defendSlash[0] = ">";
+                        infoSlash[0] = " ";
+                        passSlash[0] = " ";
+                    }
+                    if (Selection == 3)
+                    {
+                        fightSlash[0] = " ";
+                        defendSlash[0] = " ";
+                        infoSlash[0] = ">";
+                        passSlash[0] = " ";
+                    }
+                    if (Selection == 4)
+                    {
+                        fightSlash[0] = " ";
+                        defendSlash[0] = " ";
+                        infoSlash[0] = " ";
+                        passSlash[0] = ">";
+                    }
+                }
+            }
+        }
 
         public void move()
         {
@@ -342,7 +455,7 @@ namespace rpg
             if (keyinfo.Key == ConsoleKey.W)
             {
                 Wait++;
-                if (tab[(x - 1), y] == "A" | tab[(x - 1), y] == "|" | tab[(x - 1), y] == "_")
+                if (tab[(x - 1), y] == "A")
                 {
 
                 }
@@ -389,6 +502,10 @@ namespace rpg
                 {
                     Signal = true;
                     mesNumber = 2;
+                }
+                else if (tab[(x - 1), y] == "E")
+                {
+                    Battle = true;
                 }
                 else
                 {
@@ -445,6 +562,10 @@ namespace rpg
                 {
                     Signal = true;
                     mesNumber = 2;
+                }
+                else if (tab[x, (y - 1)] == "E")
+                {
+                    Battle = true;
                 }
                 else
                 {
@@ -503,6 +624,10 @@ namespace rpg
                     Signal = true;
                     mesNumber = 2;
                 }
+                else if (tab[(x + 1), y] == "E")
+                {
+                    Battle = true;
+                }
                 else
                 {
                     x++;
@@ -558,6 +683,10 @@ namespace rpg
                 {
                     Signal = true;
                     mesNumber = 2;
+                }
+                else if (tab[x, (y + 1)] == "E")
+                {
+                    Battle = true;
                 }
                 else
                 {
@@ -683,7 +812,7 @@ namespace rpg
                     }
                     else if (updown == 4)
                     {
-                        EnemX++;
+                        EnemX--;
                     }
                 }
             }
@@ -750,7 +879,7 @@ namespace rpg
         {
             Game RPG = new Game();
             Console.CursorVisible = false;
-            RPG.mapStart();
+            RPG.Boot();
         }
     }
 }
