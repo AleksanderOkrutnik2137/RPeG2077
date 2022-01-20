@@ -479,9 +479,9 @@ namespace rpg
                         Round = false;
                         Console.Clear();
                         Console.WriteLine("You charged towards an enemy.");
-                        Thread.Sleep(200);
+                        Thread.Sleep(2000);
                         CharPlayer.attackEnemy(Hostile);
-                        Thread.Sleep(3000);
+                        Thread.Sleep(2000);
                         Hostile.attackPlayer(CharPlayer);
                         Console.WriteLine("\n\n Press Enter to continue.");
                         Continue = true;
@@ -491,7 +491,7 @@ namespace rpg
                         Round = false;
                         Console.Clear();
                         Console.WriteLine("You tried to heal.");
-                        Thread.Sleep(3000);
+                        Thread.Sleep(2000);
                         CharPlayer.HeroHeal();
                         Console.WriteLine("\n\n Press Enter to continue.");
                         Continue = true;
@@ -501,7 +501,7 @@ namespace rpg
                         Round = false;
                         Console.Clear();
                         Console.WriteLine(Hostile);
-                        Thread.Sleep(3000);
+                        Thread.Sleep(2000);
                         Hostile.attackPlayer(CharPlayer);
                         Console.WriteLine("\n\n Press Enter to continue.");
                         Continue = true;
@@ -511,7 +511,7 @@ namespace rpg
                         Round = false;
                         Console.Clear();
                         Console.WriteLine("You passed your turn.");
-                        Thread.Sleep(3000);
+                        Thread.Sleep(2000);
                         Hostile.attackPlayer(CharPlayer);
                         Console.WriteLine("\n\n Press Enter to continue.");
                         Continue = true;
@@ -1042,7 +1042,7 @@ namespace rpg
         {
             Game RPG = new Game();
             Console.CursorVisible = false;
-            RPG.mapStart();
+            RPG.Boot();
         }
     }
 }
