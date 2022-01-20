@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Media;
 using System.Text;
@@ -144,7 +145,7 @@ namespace rpg
 
             while (Clasa == true)               // pętle while, zmieniające znaki podczas wybierania
             {
-                Console.Clear();
+                Console.Clear();    
                 Console.Write(mesClass[0]);
 
                 Console.Write(WizSlash[0]);
@@ -159,6 +160,7 @@ namespace rpg
                     BanSlash[i] = "Rioter";
                     Console.Write(BanSlash[i]);
                 }
+                Console.SetCursorPosition(0, 0);
 
                 ConsoleKeyInfo keyinfo = Console.ReadKey(true);
                 if (keyinfo.Key == ConsoleKey.W)
@@ -282,7 +284,7 @@ namespace rpg
                         NPCx = i;
                         NPCy = j;
                     }
-                    if (setMap == 1 & enem == "E")
+                    if (setMap == 1 & enem == "E" & Hostile.EnemHP > 0)
                     {
                         tab[i, j] = tmp3[j].ToString();
                         EnemX = i;
@@ -297,7 +299,7 @@ namespace rpg
         }
         public void PrintMap()
         {
-            string[] mesInteraction = { "                             \n                              ", "Trauma Generator found.\nBut it seems to be inactive...", "Go to the next room.\nThere's Trauma Generator.", "An enemy!" };
+            string[] mesInteraction = { "                             \n                                                                ", "A Trauma Generator.\nBut it seems to be inactive...", "Go to the next room.\nThere's Trauma Generator. It can respawn dead enemies.", "An enemy!", "A Trauma Generator.\nIt looks like something happened inside." };
 
             for (int i = 0; i < tab.GetLength(0); i++)
             {
@@ -312,7 +314,7 @@ namespace rpg
                     {
                         tab[i, j] = "S";
                     }
-                    else if (setMap == 1 & i == EnemX & j == EnemY)
+                    else if (setMap == 1 & i == EnemX & j == EnemY & Hostile.EnemHP > 0)
                     {
                         tab[i, j] = "E";
                     }
@@ -342,12 +344,20 @@ namespace rpg
         }
         public void Fight()
         {
+
             Dialogue.Generate(2, null, Hostile.Name, 0, 0, 1);
             Dialogue.Generate(2, null, " spotted you.\n\n", 0, 0, 0);
-            while (true)
+            bool Continue = false;
+            bool Round = true;
+            bool now = false;
+            bool Fight = true;
+            bool Endgame = false;
+
+            while (Fight == true)
             {
-                bool Round = true;
+                bool Choosing = true;
                 int Selection = 1;
+
 
                 int fightLength = 2;
                 int defendLength = 2;
@@ -363,9 +373,29 @@ namespace rpg
                 infoSlash[0] = " ";
                 passSlash[0] = " ";
 
+                if (Hostile.EnemHP <= 0)
+                {
+                    Round = false;
+                    Fight = false;
+                    Dialogue.Generate(2, null, "Enemy has been defeated.", 0, 0, 1);
+                    Endgame = true;
+                }
+                if (CharPlayer.HeroHP <= 0)
+                {
+                    Round = false;
+                    Fight = false;
+                    Dialogue.Generate(2, null, "Simulation failed. Player died.", 0, 3000, 1);
+                    Dialogue.Generate(2, null, "Closing SIMULATION_PROGRAM...", 0, 3000, 1);
+                    Environment.Exit(0);
+                }
+
                 while (Round == true)
                 {
-
+                    if (now == true)
+                    {
+                        Console.WriteLine("...\n\n");
+                    }
+                    Console.SetCursorPosition(0, 2);
                     Console.Write(fightSlash[0]);               
                     for (int i = 1; i < fightLength; i++)
                     {
@@ -375,7 +405,7 @@ namespace rpg
                     Console.Write("\n" + defendSlash[0]);
                     for (int i = 1; i < defendLength; i++)
                     {
-                        defendSlash[i] = "Defend";
+                        defendSlash[i] = "Heal";
                         Console.Write(defendSlash[i]);
                     }
                     Console.Write("\n" + infoSlash[0]);
@@ -390,7 +420,6 @@ namespace rpg
                         passSlash[i] = "Pass";
                         Console.Write(passSlash[i]);
                     }
-                    Console.WriteLine(Selection);
 
                     Console.SetCursorPosition(0, 2);
                     ConsoleKeyInfo keyinfo = Console.ReadKey(true);
@@ -444,6 +473,71 @@ namespace rpg
                         infoSlash[0] = " ";
                         passSlash[0] = ">";
                     }
+
+                    if (keyinfo.Key == ConsoleKey.Enter && Selection == 1)
+                    {
+                        Round = false;
+                        Console.Clear();
+                        Console.WriteLine("You charged towards an enemy.");
+                        Thread.Sleep(200);
+                        CharPlayer.attackEnemy(Hostile);
+                        Thread.Sleep(3000);
+                        Hostile.attackPlayer(CharPlayer);
+                        Console.WriteLine("\n\n Press Enter to continue.");
+                        Continue = true;
+                    }
+                    if (keyinfo.Key == ConsoleKey.Enter && Selection == 2)
+                    {
+                        Round = false;
+                        Console.Clear();
+                        Console.WriteLine("You tried to heal.");
+                        Thread.Sleep(3000);
+                        CharPlayer.HeroHeal();
+                        Console.WriteLine("\n\n Press Enter to continue.");
+                        Continue = true;
+                    }
+                    if (keyinfo.Key == ConsoleKey.Enter && Selection == 3)
+                    {
+                        Round = false;
+                        Console.Clear();
+                        Console.WriteLine(Hostile);
+                        Thread.Sleep(3000);
+                        Hostile.attackPlayer(CharPlayer);
+                        Console.WriteLine("\n\n Press Enter to continue.");
+                        Continue = true;
+                    }
+                    if (keyinfo.Key == ConsoleKey.Enter && Selection == 4)
+                    {
+                        Round = false;
+                        Console.Clear();
+                        Console.WriteLine("You passed your turn.");
+                        Thread.Sleep(3000);
+                        Hostile.attackPlayer(CharPlayer);
+                        Console.WriteLine("\n\n Press Enter to continue.");
+                        Continue = true;
+                    }
+
+                }
+                while (Continue == true)
+                {
+                    ConsoleKeyInfo keyinfo = Console.ReadKey(true);
+                    if (keyinfo.Key == ConsoleKey.Enter)
+                    {
+                        Console.Clear();
+                        Continue = false;
+                        now = true;
+                        Round = true;
+                    }
+                }
+                while (Endgame == true)
+                {
+                    ConsoleKeyInfo keyinfo = Console.ReadKey(true);
+                    if (keyinfo.Key == ConsoleKey.Enter)
+                    {
+                        Console.Clear();
+                        Battle = false;
+                        mapStart();
+                    }
                 }
             }
         }
@@ -451,7 +545,11 @@ namespace rpg
         public void move()
         {
             ConsoleKeyInfo keyinfo = Console.ReadKey(true);
-
+            if (keyinfo.Key == ConsoleKey.Escape)
+            {
+                Dialogue.Generate(2, null, "Closing SIMULATION_PROGRAM...", 0, 3000, 1);
+                Environment.Exit(0);
+            }
             if (keyinfo.Key == ConsoleKey.W)
             {
                 Wait++;
@@ -495,8 +593,17 @@ namespace rpg
                 }
                 else if (setMap == 3 & tab[(x - 1), y] == "T")
                 {
-                    Signal = true;
-                    mesNumber = 1;
+                    if (Hostile.EnemHP > 0)
+                    {
+                        Signal = true;
+                        mesNumber = 1;
+                    }
+                    if (Hostile.EnemHP <= 0)
+                    {
+                        Hostile.EnemHP = 30;
+                        Signal = true;
+                        mesNumber = 4;
+                    }
                 }
                 else if (tab[(x - 1), y] == "S")
                 {
@@ -555,8 +662,17 @@ namespace rpg
                 }
                 else if (setMap == 3 & tab[x, (y - 1)] == "T")
                 {
-                    Signal = true;
-                    mesNumber = 1;
+                    if (Hostile.EnemHP > 0)
+                    {
+                        Signal = true;
+                        mesNumber = 1;
+                    }
+                    if (Hostile.EnemHP <= 0)
+                    {
+                        Hostile.EnemHP = 30;
+                        Signal = true;
+                        mesNumber = 4;
+                    }
                 }
                 else if (tab[x, (y - 1)] == "S")
                 {
@@ -616,8 +732,17 @@ namespace rpg
                 }
                 else if (setMap == 3 & tab[(x + 1), y] == "T")
                 {
-                    Signal = true;
-                    mesNumber = 1;
+                    if (Hostile.EnemHP > 0)
+                    {
+                        Signal = true;
+                        mesNumber = 1;
+                    }
+                    if (Hostile.EnemHP <= 0)
+                    {
+                        Hostile.EnemHP = 30;
+                        Signal = true;
+                        mesNumber = 4;
+                    }
                 }
                 else if (tab[(x + 1), y] == "S")
                 {
@@ -676,8 +801,17 @@ namespace rpg
                 }
                 else if (setMap == 3 & tab[x, (y + 1)] == "T")
                 {
-                    Signal = true;
-                    mesNumber = 1;
+                    if (Hostile.EnemHP > 0)
+                    {
+                        Signal = true;
+                        mesNumber = 1;
+                    }
+                    if (Hostile.EnemHP <= 0)
+                    {
+                        Hostile.EnemHP = 30;
+                        Signal = true;
+                        mesNumber = 4;
+                    }
                 }
                 else if (tab[x, (y + 1)] == "S")
                 {
@@ -821,18 +955,34 @@ namespace rpg
 
     class Player
     {
+        Random rand = new Random();
         public string Name { get; set; }
-        int HeroHP;
+        public int HeroHP { get; set; }
         int HeroATK;
         public Player()
         {
             this.Name = Name;
             this.HeroHP = 30;
-            this.HeroATK = 15;
+            this.HeroATK = 13;
         }
         public void setName(string newName)
         {
             this.Name = newName;
+        }
+        public void attackEnemy(Enemy myhostile)
+        {
+            myhostile.takeDamage(this.HeroATK);
+        }
+        public void takeDMG(int attack)
+        {
+            this.HeroHP -= attack;
+            Console.WriteLine("\nEnemy attacked " + Name + " in revenge. \nCurrent Player HP is: " + this.HeroHP);
+        }
+        public void HeroHeal()
+        {
+            int HealValue = rand.Next(0, 9);
+            this.HeroHP += HealValue;
+            Console.WriteLine("\nPlayer has been healed for " + HealValue + " HP. \nCurrent Player HP is: " + this.HeroHP);
         }
     }
     class Wizjoner : Player
@@ -863,13 +1013,26 @@ namespace rpg
     class Enemy
     {
         public string Name { get; set; }
-        int HeroHP;
-        int HeroATK;
+        public int EnemHP { get; set; }
+        int EnemATK;
         public Enemy()
         {
             this.Name = ">Null< Soldier";
-            this.HeroHP = 30;
-            this.HeroATK = 15;
+            this.EnemHP = 30;
+            this.EnemATK = 4;
+        }
+        public override string ToString()
+        {
+            return Name + " - result of a secret government project. " + EnemHP + " HP. " + EnemATK + " ATK. \n";
+        }
+        public void attackPlayer(Player CharPlayer)
+        {
+            CharPlayer.takeDMG(this.EnemATK);
+        }
+        public void takeDamage(int attack)
+        {
+            this.EnemHP -= attack;
+            Console.WriteLine("\nPlayer attacked enemy for " + attack + " points. \nCurrent enemy HP is: " + this.EnemHP);
         }
     }
 
@@ -879,7 +1042,7 @@ namespace rpg
         {
             Game RPG = new Game();
             Console.CursorVisible = false;
-            RPG.Boot();
+            RPG.mapStart();
         }
     }
 }
