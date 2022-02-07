@@ -1,2 +1,4 @@
 # RPeG2077
-Najbardziej zbugowana konsolówka
+
+Nominowana do The Game Awards "gra" konsolowa, napisana gorzej niż Yandere Simulator.
+Enjoy :>
