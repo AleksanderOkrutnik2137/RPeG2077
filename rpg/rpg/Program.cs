@@ -355,10 +355,7 @@ namespace rpg
 
             while (Fight == true)
             {
-                bool Choosing = true;
                 int Selection = 1;
-
-
                 int fightLength = 2;
                 int defendLength = 2;
                 int infoLength = 2;
